@@ -1,10 +1,11 @@
-import { CohereRepository } from '../repositories/cohere.repository.js'
 import { messages } from './few-shot.js'
 import { SUPPORTED_LANGUAGES } from '../../../shared/constants/constants.js'
+import { ITranslationService } from '../../../shared/interfaces/translation.service.interface.js'
 
-export class TranslationService {
-  constructor () {
-    this.cohereRepository = new CohereRepository()
+export class TranslationService extends ITranslationService {
+  constructor (repository) {
+    super()
+    this.repository = repository
   }
 
   async translateText (fromLang, toLang, text) {
@@ -16,7 +17,7 @@ export class TranslationService {
     const fromCode = fromLang === 'auto' ? 'auto' : SUPPORTED_LANGUAGES[fromLang]
     const toCode = SUPPORTED_LANGUAGES[toLang]
 
-    const translatedText = await this.cohereRepository.translate(text, fromCode, toCode, messages)
+    const translatedText = await this.repository.translate(text, fromCode, toCode, messages)
 
     return translatedText
   }

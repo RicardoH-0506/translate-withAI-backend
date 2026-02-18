@@ -1,18 +1,17 @@
-import { TranslationService } from '../services/translation.service.js'
 import { translationSchema } from '../../../../schemas/translation.js'
-import { flattenError } from 'zod'
+import { z } from 'zod'
 
 export class TranslationController {
-  constructor () {
-    this.translationService = new TranslationService()
+  constructor (translateService) {
+    this.translationService = translateService
   }
 
-  async translate (req, res, next) {
+  translate = async (req, res) => {
     const validatedBody = translationSchema.safeParse(req.body)
 
     if (!validatedBody.success) {
       return res.status(400).json({
-        errors: flattenError(validatedBody.error).fieldErrors,
+        errors: z.flattenError(validatedBody.error).fieldErrors,
         message: 'There were validation errors'
       })
     }
