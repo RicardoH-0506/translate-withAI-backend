@@ -1,6 +1,6 @@
 export const corsMiddleware = (origin, callback) => {
   const ACCEPTED_ORIGINS = [
-    'http://localhost:5173',
+    'http://localhost:5174',
     'https://translate-with-ia.vercel.app'
   ]
 
