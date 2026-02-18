@@ -8,7 +8,7 @@ export class CohereRepository extends ITranslationRepository {
 
   async translate (text, fromCode, toCode, messages) {
     const response = await this.client.chat({
-      model: 'command-r7b-12-2024',
+      model: 'command-a-translate-08-2025',
       messages: [
         ...messages,
         {
