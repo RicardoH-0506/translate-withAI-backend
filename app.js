@@ -2,12 +2,19 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { corsMiddleware } from './src/shared/middleware/cors.middleware.js'
-import { TranslationController } from './src/features/translation/controllers/translation.controller.js'
+import { DIContainer } from './src/shared/container/dependency.container.js'
 
 // Load environment variables from .env file
 const PORT = process.env.PORT ?? 1234
 
 const app = express()
+
+// Initialize dependency container
+const container = new DIContainer()
+container.registerServices()
+
+// Get dependencies from container
+const translationController = container.get('translationController')
 
 // Middlewares
 app.use(cors({
@@ -17,9 +24,6 @@ app.use(express.json())
 
 // Disable 'X-Powered-By' header
 app.disable('x-powered-by')
-
-// Initialize controllers
-const translationController = new TranslationController()
 
 // Routes
 app.get('/', (req, res) => {
