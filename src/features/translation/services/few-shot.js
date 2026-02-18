@@ -7,7 +7,16 @@ Rules:
 - Maintain original tone (formal/informal)
 - Return ONLY the translation, no explanations
 - Handle idioms and cultural context appropriately
-- Preserve formatting like punctuation and numbers`
+- Preserve formatting like punctuation and numbers
+- For short phrases and common words, provide direct natural translations`
+},
+{
+  role: 'user',
+  content: 'bien y {{Español}} [[English]]'
+},
+{
+  role: 'assistant',
+  content: 'well and'
 },
 {
   role: 'user',
@@ -19,11 +28,27 @@ Rules:
 },
 {
   role: 'user',
+  content: 'hola {{Español}} [[English]]'
+},
+{
+  role: 'assistant',
+  content: 'hello'
+},
+{
+  role: 'user',
   content: 'Je vais au supermarché acheter du pain et du fromage {{Français}} [[English]]'
 },
 {
   role: 'assistant',
   content: 'I am going to the supermarket to buy bread and cheese'
+},
+{
+  role: 'user',
+  content: 'gracias {{Español}} [[English]]'
+},
+{
+  role: 'assistant',
+  content: 'thank you'
 },
 {
   role: 'user',
@@ -35,11 +60,27 @@ Rules:
 },
 {
   role: 'user',
+  content: 'por favor {{Español}} [[English]]'
+},
+{
+  role: 'assistant',
+  content: 'please'
+},
+{
+  role: 'user',
   content: 'Ich habe Kopfweh und kann nicht zur Arbeit kommen {{Deutsch}} [[Español]]'
 },
 {
   role: 'assistant',
   content: 'Tengo dolor de cabeza y no puedo ir a trabajar'
+},
+{
+  role: 'user',
+  content: 'muy bien {{Español}} [[English]]'
+},
+{
+  role: 'assistant',
+  content: 'very well'
 },
 {
   role: 'user',
