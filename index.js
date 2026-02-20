@@ -1,11 +1,9 @@
 /**
  * Application Entry Point
- * Exports the Express server for Vercel deployment
+ * Imports Express explicitly and exports configured app for Vercel deployment
  */
+import express from 'express'
 import app from './src/presentation/server.js'
 
 // Export the Express app for Vercel
 export default app
-
-// Note: server.js handles app.listen() only in development
-console.log('AI Translation API loaded...')
