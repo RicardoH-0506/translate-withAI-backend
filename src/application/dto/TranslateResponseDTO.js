@@ -29,24 +29,6 @@ export const translateResponseSchema = z.object({
  */
 
 /**
- * Factory function to create validated response DTO
- * @param {Object} translationData - Raw translation data
- * @returns {Object} Validated response DTO
- */
-export const createTranslateResponseDTO = (translationData) => {
-  const result = translateResponseSchema.safeParse(translationData)
-
-  if (!result.success) {
-    // Log validation error but don't fail the response
-    console.error('Response validation error:', result.error.issues)
-    // Return original data if validation fails
-    return translationData
-  }
-
-  return result.data
-}
-
-/**
  * Success response wrapper
  * @param {Object} data - Translation response data
  * @returns {Object} Standardized success response
@@ -54,6 +36,6 @@ export const createTranslateResponseDTO = (translationData) => {
 export const createSuccessResponse = (data) => {
   return {
     success: true,
-    data: createTranslateResponseDTO(data)
+    data
   }
 }

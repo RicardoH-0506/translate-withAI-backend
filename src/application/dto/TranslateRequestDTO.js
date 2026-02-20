@@ -34,25 +34,3 @@ export const translateRequestSchema = z.object({
  * In JavaScript, use the schema directly for validation
  * TypeScript users can import: type TranslateRequestDTO = z.infer<typeof translateRequestSchema>
  */
-
-/**
- * Factory function to create validated DTO
- * @param {unknown} data - Raw request data
- * @returns {TranslateRequestDTO} Validated DTO
- * @throws {Error} If validation fails
- */
-export const createTranslateRequestDTO = (data) => {
-  const result = translateRequestSchema.safeParse(data)
-
-  if (!result.success) {
-    const fieldErrors = {}
-    result.error.issues.forEach(issue => {
-      const field = issue.path.join('.')
-      fieldErrors[field] = issue.message
-    })
-
-    throw new Error(`Validation failed: ${JSON.stringify(fieldErrors)}`)
-  }
-
-  return result.data
-}
