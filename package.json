@@ -2,13 +2,13 @@
   "name": "google-translate-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "exports": "./index.js",
+  "main": "server.js",
+  "exports": "./server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "dev": "node --watch index.js",
+    "dev": "node --watch server.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
