@@ -17,11 +17,11 @@
   "license": "ISC",
   "type": "module",
   "imports": {
-    "@core/*": "./src/core/*",
-    "@application/*": "./src/application/*",
-    "@infrastructure/*": "./src/infrastructure/*",
-    "@presentation/*": "./src/presentation/*",
-    "@shared/*": "./src/shared/*"
+    "#core/*": "./src/core/*",
+    "#application/*": "./src/application/*",
+    "#infrastructure/*": "./src/infrastructure/*",
+    "#presentation/*": "./src/presentation/*",
+    "#shared/*": "./src/shared/*"
   },
   "dependencies": {
     "cohere-ai": "^7.19.0",
