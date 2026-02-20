@@ -5,10 +5,10 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import { corsMiddleware } from './src/presentation/middleware/cors.js'
-import { generalRateLimit } from './src/presentation/middleware/rateLimit.js'
-import { DIContainer } from './src/shared/container/dependency.container.js'
-import { createTranslationRoutes } from './src/presentation/routes/translation.routes.js'
+import { corsMiddleware } from './src/presentation/translate/middleware/cors.js'
+import { generalRateLimit } from './src/presentation/translate/middleware/rateLimit.js'
+import { DIContainer } from './src/shared/translate/dependency.container.js'
+import { createTranslationRoutes } from './src/presentation/translate/routes/translation.routes.js'
 
 // Load environment variables from .env file
 const PORT = process.env.PORT ?? 1234
