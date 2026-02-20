@@ -9,15 +9,27 @@ export class Translation {
    * @param {string} text - Text to translate
    * @param {string} fromLang - Source language code
    * @param {string} toLang - Target language code
+   * @param {string} id - Optional ID (injected for testability)
+   * @param {Function} idGenerator - Optional ID generator function
    */
-  constructor (text, fromLang, toLang) {
-    this.id = crypto.randomUUID()
+  constructor (text, fromLang, toLang, id = null, idGenerator = null) {
+    this.id = id || (idGenerator ? idGenerator() : this.generateId())
     this.text = text
     this.fromLang = fromLang
     this.toLang = toLang
     this.translatedText = null
     this.createdAt = new Date()
     this.status = 'pending'
+  }
+
+  /**
+   * Generate unique ID (isolated for testability)
+   * @private
+   * @returns {string} Unique identifier
+   */
+  generateId () {
+    // In production, this would be injected
+    return crypto.randomUUID()
   }
 
   /**
