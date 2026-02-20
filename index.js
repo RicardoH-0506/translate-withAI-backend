@@ -1,9 +1,11 @@
 /**
  * Application Entry Point
- * Starts the Express server from the presentation layer
+ * Exports the Express server for Vercel deployment
  */
-import './src/presentation/server.js'
+import app from './src/presentation/server.js'
 
-// Note: server.js handles app.listen(), so this file just imports it
-// This allows for future extensibility (e.g., cluster mode, graceful shutdown, etc.)
-console.log('Starting AI Translation API...')
+// Export the Express app for Vercel
+export default app
+
+// Note: server.js handles app.listen() only in development
+console.log('AI Translation API loaded...')

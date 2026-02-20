@@ -38,7 +38,12 @@ app.disable('x-powered-by')
 const translationRouter = createTranslationRoutes(translationController)
 app.use('/', translationRouter)
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server listening on port http://localhost:${PORT}`)
-})
+// Export app for Vercel deployment
+export default app
+
+// Start server only when not in Vercel environment
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server listening on port http://localhost:${PORT}`)
+  })
+}
