@@ -1,6 +1,6 @@
-import { TranslationError } from '@core/errors/TranslationError.js'
-import { SUPPORTED_LANGUAGES } from '@core/constants/constants.js'
-import { messages } from '@application/usecases/translate/few-shot.js'
+import { TranslationError } from '#core/errors/TranslationError.js'
+import { SUPPORTED_LANGUAGES } from '#core/constants/constants.js'
+import { messages } from '#core/usecases/translate/few-shot.js'
 
 /**
  * TranslationService - Application Service
@@ -91,23 +91,5 @@ export class TranslationService {
    */
   getSupportedLanguages () {
     return SUPPORTED_LANGUAGES
-  }
-
-  /**
-   * Check if translation service is available
-   * @returns {Promise<boolean>} Service availability
-   */
-  async isAvailable () {
-    try {
-      // Create a test translation to check availability
-      await this.translateUseCase.execute({
-        text: 'test',
-        fromLang: 'auto',
-        toLang: 'en'
-      })
-      return true
-    } catch (error) {
-      return false
-    }
   }
 }
