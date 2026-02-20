@@ -3,7 +3,7 @@
  * Handles HTTP requests and responses for translation endpoints
  * Only deals with HTTP concerns, delegates business logic to services
  */
-import { createSuccessResponse } from '#application/dto/TranslateResponseDTO.js'
+import { createSuccessResponse } from '../../application/dto/TranslateResponseDTO.js'
 export class TranslationController {
   /**
    * Create controller with translation service

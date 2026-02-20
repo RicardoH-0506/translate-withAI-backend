@@ -3,7 +3,7 @@
  * Handles HTTP request validation using Zod schemas
  * Follows clean architecture: validation in presentation layer
  */
-import { translateRequestSchema } from '@application/dto/TranslateRequestDTO.js'
+import { translateRequestSchema } from '../../application/dto/TranslateRequestDTO.js'
 
 /**
  * Validates translation request body using Zod schema

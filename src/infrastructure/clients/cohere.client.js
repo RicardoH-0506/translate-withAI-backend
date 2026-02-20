@@ -1,4 +1,4 @@
-import { IAIClient } from '#core/interfaces/ai.client.interface.js'
+import { IAIClient } from '../../core/interfaces/ai.client.interface.js'
 import { CohereClientV2 } from 'cohere-ai'
 
 /**

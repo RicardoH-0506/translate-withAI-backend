@@ -1,6 +1,6 @@
-import { TranslationError } from '#core/errors/TranslationError.js'
-import { SUPPORTED_LANGUAGES } from '#core/constants/constants.js'
-import { messages } from '#core/usecases/translate/few-shot.js'
+import { TranslationError } from '../../core/errors/TranslationError.js'
+import { SUPPORTED_LANGUAGES } from '../../core/constants/constants.js'
+import { messages } from '../../core/usecases/translate/few-shot.js'
 
 /**
  * TranslationService - Application Service

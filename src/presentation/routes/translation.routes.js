@@ -4,8 +4,8 @@
  * Uses Controller Injection pattern for better testability
  */
 import { Router } from 'express'
-import { translationRateLimit, burstProtection } from '@presentation/middleware/rateLimit.js'
-import { validateTranslation } from '@presentation/middleware/validation.js'
+import { translationRateLimit, burstProtection } from '../middleware/rateLimit.js'
+import { validateTranslation } from '../middleware/validation.js'
 
 const router = Router()
 

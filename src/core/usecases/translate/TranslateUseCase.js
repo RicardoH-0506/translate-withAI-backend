@@ -1,5 +1,5 @@
-import { Translation } from '#core/entities/Translation.js'
-import { TranslationError } from '#core/errors/TranslationError.js'
+import { Translation } from '../../entities/Translation.js'
+import { TranslationError } from '../../errors/TranslationError.js'
 
 /**
  * TranslateUseCase - Core Domain Use Case

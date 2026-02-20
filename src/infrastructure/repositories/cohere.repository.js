@@ -1,4 +1,4 @@
-import { ITranslationRepository } from '@core/interfaces/translation.repository.interface.js'
+import { ITranslationRepository } from '../../core/interfaces/translation.repository.interface.js'
 
 /**
  * CohereRepository - Infrastructure Implementation
