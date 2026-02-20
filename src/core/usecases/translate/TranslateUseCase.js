@@ -1,5 +1,5 @@
-import { Translation } from '@core/entities/Translation.js'
-import { TranslationError } from '@core/errors/TranslationError.js'
+import { Translation } from '#core/entities/Translation.js'
+import { TranslationError } from '#core/errors/TranslationError.js'
 
 /**
  * TranslateUseCase - Core Domain Use Case
@@ -36,12 +36,6 @@ export class TranslateUseCase {
     )
 
     try {
-      // Check repository availability
-      const isReady = await this.repository.isReady()
-      if (!isReady) {
-        throw new TranslationError('Translation service is not available')
-      }
-
       // Perform translation through repository
       const translatedText = await this.repository.translate(
         translation.text,
