@@ -1,11 +1,12 @@
 /**
  * Simple Dependency Injection Container
- * Implements Dependency Inversion Principle
+ * Implements Dependency Inversion Principle following Clean Architecture
  */
-import { CohereClient } from '../infrastructure/clients/cohere.client.js'
-import { CohereRepository } from '../../features/translation/repositories/cohere.repository.js'
-import { TranslationService } from '../../features/translation/services/translation.service.js'
-import { TranslationController } from '../../features/translation/controllers/translation.controller.js'
+import { CohereClient } from '@infrastructure/clients/cohere.client.js'
+import { CohereRepository } from '@infrastructure/repositories/cohere.repository.js'
+import { TranslateUseCase } from '@application/usecases/translate/TranslateUseCase.js'
+import { TranslationService } from '@application/services/TranslationService.js'
+import { TranslationController } from '@presentation/controllers/TranslationController.js'
 
 export class DIContainer {
   constructor () {
@@ -46,25 +47,30 @@ export class DIContainer {
   }
 
   /**
-   * Register all application services
+   * Register all application services following Clean Architecture
    */
   registerServices () {
-    // Register AI Client
+    // Register AI Client (Infrastructure Layer)
     this.register('cohereClient', () => {
       return new CohereClient(process.env.COHERE_API_KEY)
     }, true)
 
-    // Register Repository
+    // Register Repository (Infrastructure Layer implementing Core Interface)
     this.register('translationRepository', (container) => {
       return new CohereRepository(container.get('cohereClient'))
     }, true)
 
-    // Register Service
-    this.register('translationService', (container) => {
-      return new TranslationService(container.get('translationRepository'))
+    // Register Use Case (Core Layer)
+    this.register('translateUseCase', (container) => {
+      return new TranslateUseCase(container.get('translationRepository'))
     }, true)
 
-    // Register Controller
+    // Register Service (Application Layer)
+    this.register('translationService', (container) => {
+      return new TranslationService(container.get('translateUseCase'))
+    }, true)
+
+    // Register Controller (Presentation Layer)
     this.register('translationController', (container) => {
       return new TranslationController(container.get('translationService'))
     }, true)
