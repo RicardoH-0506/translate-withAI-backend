@@ -2,11 +2,11 @@
  * Simple Dependency Injection Container
  * Implements Dependency Inversion Principle following Clean Architecture
  */
-import { CohereClient } from '@infrastructure/clients/cohere.client.js'
-import { CohereRepository } from '@infrastructure/repositories/cohere.repository.js'
-import { TranslateUseCase } from '@application/usecases/translate/TranslateUseCase.js'
-import { TranslationService } from '@application/services/TranslationService.js'
-import { TranslationController } from '@presentation/controllers/TranslationController.js'
+import { CohereClient } from '#infrastructure/clients/cohere.client.js'
+import { CohereRepository } from '#infrastructure/repositories/cohere.repository.js'
+import { TranslateUseCase } from '#core/usecases/translate/TranslateUseCase.js'
+import { TranslationService } from '#application/services/TranslationService.js'
+import { TranslationController } from '#presentation/controllers/TranslationController.js'
 
 export class DIContainer {
   constructor () {
