@@ -25,7 +25,7 @@ export class LanguageMapper {
    * @throws {TranslationError} If language is unsupported
    */
   static validateSourceLanguage (fromLang) {
-    const fromCode = this.mapToCode(fromLang)
+    const fromCode = LanguageMapper.mapToCode(fromLang)
     if (!fromCode) {
       throw new TranslationError(`Unsupported source language: ${fromLang}`)
     }
@@ -39,7 +39,7 @@ export class LanguageMapper {
    * @throws {TranslationError} If language is unsupported
    */
   static validateTargetLanguage (toLang) {
-    const toCode = this.mapToCode(toLang)
+    const toCode = LanguageMapper.mapToCode(toLang)
     if (!toCode) {
       throw new TranslationError(`Unsupported target language: ${toLang}`)
     }
