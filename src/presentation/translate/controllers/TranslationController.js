@@ -4,6 +4,8 @@
  * Only deals with HTTP concerns, delegates business logic to services
  */
 import { createSuccessResponse } from '../../../application/translate/dto/TranslateResponseDTO.js'
+import { ResponseHelper } from '../utils/ResponseHelper.js'
+
 export class TranslationController {
   /**
    * Create controller with translation service
@@ -19,34 +21,13 @@ export class TranslationController {
    * @param {Object} res - Express response object
    */
   translate = async (req, res) => {
-    // Use validated data from middleware
-    const { fromLang, toLang, text } = req.validatedBody
-
     try {
-      // Delegate to application service
+      const { fromLang, toLang, text } = req.validatedBody
       const result = await this.translationService.translateText(fromLang, toLang, text)
 
-      // Return success response using DTO
       res.json(createSuccessResponse(result))
     } catch (error) {
-      console.error('Translation error:', error)
-
-      // Handle domain errors
-      if (error.name === 'TranslationError') {
-        return res.status(400).json({
-          success: false,
-          error: error.code,
-          message: error.message,
-          details: error.details
-        })
-      }
-
-      // Handle unexpected errors
-      res.status(500).json({
-        success: false,
-        error: 'INTERNAL_SERVER_ERROR',
-        message: 'An unexpected error occurred during translation'
-      })
+      this.#handleTranslationError(error, res)
     }
   }
 
@@ -58,19 +39,10 @@ export class TranslationController {
   getSupportedLanguages = async (req, res) => {
     try {
       const languages = this.translationService.getSupportedLanguages()
-
-      res.json({
-        success: true,
-        data: languages
-      })
+      ResponseHelper.sendSuccess(res, languages)
     } catch (error) {
       console.error('Get languages error:', error)
-
-      res.status(500).json({
-        success: false,
-        error: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to retrieve supported languages'
-      })
+      ResponseHelper.sendInternalError(res, 'Failed to retrieve supported languages')
     }
   }
 
@@ -81,22 +53,40 @@ export class TranslationController {
    */
   healthCheck = async (req, res) => {
     try {
-      res.json({
-        success: true,
-        data: {
-          status: 'healthy',
-          timestamp: new Date().toISOString(),
-          service: 'translation'
-        }
-      })
+      const healthData = this.#createHealthData()
+      ResponseHelper.sendSuccess(res, healthData)
     } catch (error) {
       console.error('Health check error:', error)
+      ResponseHelper.sendInternalError(res, 'Service health check failed')
+    }
+  }
 
-      res.status(500).json({
-        success: false,
-        error: 'HEALTH_CHECK_FAILED',
-        message: 'Service health check failed'
-      })
+  /**
+   * Handle translation errors
+   * @private
+   * @param {Error} error - Error to handle
+   * @param {Object} res - Express response object
+   */
+  #handleTranslationError (error, res) {
+    console.error('Translation error:', error)
+
+    if (error.name === 'TranslationError') {
+      ResponseHelper.sendDomainError(res, error)
+    } else {
+      ResponseHelper.sendInternalError(res, 'An unexpected error occurred during translation')
+    }
+  }
+
+  /**
+   * Create health check data
+   * @private
+   * @returns {Object} Health data
+   */
+  #createHealthData () {
+    return {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      service: 'translation'
     }
   }
 }

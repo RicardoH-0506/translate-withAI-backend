@@ -28,7 +28,6 @@ export class Translation {
    * @returns {string} Unique identifier
    */
   generateId () {
-    // In production, this would be injected
     return crypto.randomUUID()
   }
 
@@ -57,11 +56,20 @@ export class Translation {
    * @returns {boolean} True if valid
    */
   isValid () {
-    return this.text &&
+    return this.#isValidTranslation()
+  }
+
+  /**
+   * Internal validation logic
+   * @private
+   * @returns {boolean} True if valid
+   */
+  #isValidTranslation () {
+    return !!(this.text &&
            this.text.trim() !== '' &&
            this.fromLang &&
            this.toLang &&
-           this.fromLang !== this.toLang
+           this.fromLang !== this.toLang)
   }
 
   /**
@@ -73,5 +81,29 @@ export class Translation {
 
     const endTime = this.completedAt || this.failedAt
     return endTime - this.createdAt
+  }
+
+  /**
+   * Check if translation is completed
+   * @returns {boolean} True if completed
+   */
+  isCompleted () {
+    return this.status === 'completed'
+  }
+
+  /**
+   * Check if translation failed
+   * @returns {boolean} True if failed
+   */
+  isFailed () {
+    return this.status === 'failed'
+  }
+
+  /**
+   * Check if translation is pending
+   * @returns {boolean} True if pending
+   */
+  isPending () {
+    return this.status === 'pending'
   }
 }

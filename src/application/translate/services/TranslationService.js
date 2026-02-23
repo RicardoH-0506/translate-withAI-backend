@@ -1,5 +1,5 @@
 import { TranslationError } from '../../../core/translate/errors/TranslationError.js'
-import { SUPPORTED_LANGUAGES } from '../../../core/translate/constants/constants.js'
+import { LanguageMapper } from './LanguageMapper.js'
 import { messages } from '../../../core/translate/usecases/few-shot.js'
 
 /**
@@ -26,28 +26,12 @@ export class TranslationService {
   async translateText (fromLang, toLang, text) {
     try {
       // Handle same language case
-      if (fromLang === toLang) {
-        return {
-          originalText: text,
-          translatedText: text,
-          fromLang,
-          toLang,
-          isSameLanguage: true
-        }
+      if (this.#isSameLanguage(fromLang, toLang)) {
+        return this.#createSameLanguageResponse(text, fromLang, toLang)
       }
 
-      // Map language names to codes
-      const fromCode = fromLang === 'auto' ? 'auto' : SUPPORTED_LANGUAGES[fromLang]
-      const toCode = SUPPORTED_LANGUAGES[toLang]
-
-      // Validate language codes
-      if (!fromCode) {
-        throw new TranslationError(`Unsupported source language: ${fromLang}`)
-      }
-
-      if (!toCode) {
-        throw new TranslationError(`Unsupported target language: ${toLang}`)
-      }
+      // Validate and map languages
+      const { fromCode, toCode } = this.#validateAndMapLanguages(fromLang, toLang)
 
       // Execute use case
       const translation = await this.translateUseCase.execute({
@@ -58,31 +42,98 @@ export class TranslationService {
       })
 
       // Return formatted result
-      return {
-        id: translation.id,
-        originalText: translation.text,
-        translatedText: translation.translatedText,
-        fromLang,
-        toLang,
-        fromCode,
-        toCode,
-        status: translation.status,
-        createdAt: translation.createdAt,
-        duration: translation.getDuration()
-      }
+      return this.#formatTranslationResult(translation, fromLang, toLang, fromCode, toCode)
     } catch (error) {
-      // Handle domain errors
-      if (error instanceof TranslationError) {
-        throw error
-      }
-
-      // Handle unexpected errors
-      throw new TranslationError(
-        `Translation failed: ${error.message}`,
-        'TRANSLATION_SERVICE_ERROR',
-        { originalError: error.message }
-      )
+      this.#handleTranslationError(error)
     }
+  }
+
+  /**
+   * Check if source and target languages are the same
+   * @private
+   * @param {string} fromLang - Source language
+   * @param {string} toLang - Target language
+   * @returns {boolean} True if same language
+   */
+  #isSameLanguage (fromLang, toLang) {
+    return fromLang === toLang
+  }
+
+  /**
+   * Create response for same language case
+   * @private
+   * @param {string} text - Original text
+   * @param {string} fromLang - Source language
+   * @param {string} toLang - Target language
+   * @returns {Object} Same language response
+   */
+  #createSameLanguageResponse (text, fromLang, toLang) {
+    return {
+      originalText: text,
+      translatedText: text,
+      fromLang,
+      toLang,
+      isSameLanguage: true
+    }
+  }
+
+  /**
+   * Validate and map languages
+   * @private
+   * @param {string} fromLang - Source language
+   * @param {string} toLang - Target language
+   * @returns {Object} Mapped language codes
+   * @throws {TranslationError} If languages are invalid
+   */
+  #validateAndMapLanguages (fromLang, toLang) {
+    const fromCode = LanguageMapper.validateSourceLanguage(fromLang)
+    const toCode = LanguageMapper.validateTargetLanguage(toLang)
+    return { fromCode, toCode }
+  }
+
+  /**
+   * Format translation result
+   * @private
+   * @param {Translation} translation - Translation entity
+   * @param {string} fromLang - Original source language name
+   * @param {string} toLang - Original target language name
+   * @param {string} fromCode - Source language code
+   * @param {string} toCode - Target language code
+   * @returns {Object} Formatted result
+   */
+  #formatTranslationResult (translation, fromLang, toLang, fromCode, toCode) {
+    return {
+      id: translation.id,
+      originalText: translation.text,
+      translatedText: translation.translatedText,
+      fromLang,
+      toLang,
+      fromCode,
+      toCode,
+      status: translation.status,
+      createdAt: translation.createdAt,
+      duration: translation.getDuration()
+    }
+  }
+
+  /**
+   * Handle translation errors
+   * @private
+   * @param {Error} error - Error to handle
+   * @throws {TranslationError} Always throws TranslationError
+   */
+  #handleTranslationError (error) {
+    // Handle domain errors
+    if (error instanceof TranslationError) {
+      throw error
+    }
+
+    // Handle unexpected errors
+    throw new TranslationError(
+      `Translation failed: ${error.message}`,
+      'TRANSLATION_SERVICE_ERROR',
+      { originalError: error.message }
+    )
   }
 
   /**
@@ -90,6 +141,6 @@ export class TranslationService {
    * @returns {Object} Supported languages mapping
    */
   getSupportedLanguages () {
-    return SUPPORTED_LANGUAGES
+    return LanguageMapper.getSupportedLanguages()
   }
 }
