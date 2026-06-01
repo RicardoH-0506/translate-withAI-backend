@@ -35,6 +35,24 @@ app.use(express.json())
 app.use(generalRateLimit)
 app.disable('x-powered-by')
 
+// Root health check & service metadata
+app.get('/', (_req, res) => {
+  res.status(200).json({
+    name: 'AI Translation & Transcription API',
+    version: '1.2.0',
+    description: 'Backend service for real-time translations and audio transcription powered by AI',
+    status: 'healthy',
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    endpoints: {
+      translation: '/api/v1/translate',
+      transcription: '/api/v1/transcribe',
+      websockets: '/pipeline',
+    },
+    documentation: 'https://github.com/RicardoAlexandrejs/clon-google-translate#readme',
+  })
+})
+
 // Simple functional routing setup
 app.use('/', translationRouter)
 
@@ -46,14 +64,20 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 export default app
 
-if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
-  const server = createServer(app)
-  
-  // Attach WebSocket Server functionally
-  setupWebSocketServer(server)
+// Always start the server (dev & production/Render)
+// Tests import `app` directly via supertest — no server bootstrap needed there
+const server = createServer(app)
 
-  server.listen(PORT, () => {
-    console.log(`🚀 HTTP Server listening on port http://localhost:${PORT}`)
-    console.log(`📡 WebSocket Server ready on ws://localhost:${PORT}`)
-  })
-}
+// Attach WebSocket Server to the HTTP server
+setupWebSocketServer(server)
+
+server.listen(PORT, () => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`HTTP Server listening on port http://localhost:${PORT}`)
+    console.log(`WebSocket Server ready on ws://localhost:${PORT}`)
+    console.log(`Environment: development`)
+    console.log(`Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`)
+  } else {
+    console.log(`Server successfully boot and listening on port ${PORT}`)
+  }
+})
