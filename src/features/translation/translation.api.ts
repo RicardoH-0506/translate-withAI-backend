@@ -1,5 +1,6 @@
 import { CohereClient } from 'cohere-ai'
 import { Groq, toFile } from 'groq-sdk'
+import { TRANSLATION_PREAMBLE, TRANSLATION_FEW_SHOTS } from './translation.prompts.js'
 
 // Singleton-like initialization for the clients
 const cohere = new CohereClient({
@@ -11,22 +12,24 @@ const groq = new Groq({
 })
 
 /**
- * Translates text using Cohere's command-a-translate model
+ * Translates text using Cohere's command-a-translate model.
+ * Uses a strict preamble + few-shot examples to enforce translation-only output.
  */
 export const translateText = async (
   text: string,
   fromCode: string,
   toCode: string,
-  messages: any[] = []
 ): Promise<string> => {
   const response = await cohere.chat({
     model: 'command-a-translate-08-2025',
-    message: `${text} {{${fromCode}}} [[${toCode}]]`,
-    chatHistory: messages // messages are passed as context history
+    preamble: TRANSLATION_PREAMBLE,
+    chatHistory: TRANSLATION_FEW_SHOTS,
+    message: `${text} {{${fromCode}}} [[${toCode}]]`
   })
 
   return response.text
 }
+
 
 /**
  * Transcribes binary audio to text using Groq's Whisper model.

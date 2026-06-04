@@ -25,7 +25,7 @@ router.post('/translate', async (req, res, next) => {
     const toCode = validateLanguage(data.toLang)
 
     // 3. API Call
-    const translatedText = await translateText(data.text, fromCode, toCode, data.messages)
+    const translatedText = await translateText(data.text, fromCode, toCode)
 
     // 4. Response
     res.json({
