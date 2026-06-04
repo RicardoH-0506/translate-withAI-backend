@@ -54,9 +54,7 @@ app.get('/', (_req, res) => {
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
     endpoints: {
-      translation: '/api/v1/translate',
-      transcription: '/api/v1/transcribe',
-      websockets: '/pipeline',
+      translation: '/translate',
     },
     documentation: 'https://github.com/RicardoAlexandrejs/clon-google-translate#readme',
   })
