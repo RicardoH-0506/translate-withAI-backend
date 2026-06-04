@@ -18,8 +18,11 @@ const MAX_CONNECTIONS_PER_IP = 5
 /**
  * Configura y gestiona las conexiones WebSocket para la traducción por voz.
  */
-export function setupWebSocketServer(server: Server) {
-  const wss = new WebSocketServer({ server })
+export function setupWebSocketServer(server: Server, isOriginAllowed: (origin: string | undefined) => boolean) {
+  const wss = new WebSocketServer({
+    server,
+    verifyClient: ({ origin }: { origin: string }) => isOriginAllowed(origin)
+  })
   console.log('✅ WebSocket Server inicializado')
 
   wss.on('connection', (ws: AppWebSocket, req) => {

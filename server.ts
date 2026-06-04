@@ -8,14 +8,23 @@ import rateLimit from 'express-rate-limit'
 
 // Load environment variables
 const PORT = process.env.PORT || 1234
-const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173']
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') || []
+
+// Checks if an origin is allowed: explicit list OR any localhost (for local dev)
+const isOriginAllowed = (origin: string | undefined): boolean => {
+  if (!origin) return true // same-origin / server-to-server
+  if (ALLOWED_ORIGINS.includes(origin)) return true
+  // Always allow localhost regardless of NODE_ENV (no real traffic comes from localhost)
+  if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return true
+  return false
+}
 
 const app = express()
 
 // Functional middlewares instead of OOP classes
 const corsMiddleware = cors({
   origin: (origin, callback) => {
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+    if (isOriginAllowed(origin)) {
       callback(null, true)
     } else {
       callback(new Error('No permitido por CORS'))
@@ -69,14 +78,14 @@ export default app
 const server = createServer(app)
 
 // Attach WebSocket Server to the HTTP server
-setupWebSocketServer(server)
+setupWebSocketServer(server, isOriginAllowed)
 
 server.listen(PORT, () => {
   if (process.env.NODE_ENV !== 'production') {
     console.log(`HTTP Server listening on port http://localhost:${PORT}`)
     console.log(`WebSocket Server ready on ws://localhost:${PORT}`)
     console.log(`Environment: development`)
-    console.log(`Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`)
+    console.log(`Allowed origins: any localhost (dev mode)`)
   } else {
     console.log(`Server successfully boot and listening on port ${PORT}`)
   }
