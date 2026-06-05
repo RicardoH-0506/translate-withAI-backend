@@ -1,8 +1,3 @@
-Here is the new `README.md` content you can copy and use for your GitHub repository:
-
----
-
-```markdown
 # Diglossify — AI Translation & Transcription Backend
 
 An enterprise-grade backend service for real-time text translation and audio transcription, powered by Cohere and Groq AI. Built with Node.js, Express, and TypeScript following **Clean Architecture** and **Screaming Architecture** principles.
